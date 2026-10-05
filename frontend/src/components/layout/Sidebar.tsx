@@ -55,7 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
               </div>
             </div>
           ) : (
-            <div className="w-8 h-8 mx-auto rounded bg-sky-600/20 border border-sky-500/50 flex items-center justify-center">
+            <div className="w-8 h-8 mx-auto rounded bg-sky-600/20 border border-sky-500/50 flex items-center justify-center" title="Bridge Maintenance Intelligence Platform">
               <ShieldAlert className="w-5 h-5 text-sky-400" />
             </div>
           )}
@@ -63,7 +63,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
           <button
             onClick={onToggleCollapse}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className="p-1 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="p-1.5 rounded-md text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition-colors"
           >
             {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
@@ -78,11 +79,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
                 key={item.to}
                 to={item.to}
                 title={collapsed ? item.name : undefined}
+                aria-label={item.name}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2 rounded-md text-xs font-medium transition-colors ${
+                  `flex items-center gap-3 px-3 py-2 rounded-md text-xs font-medium transition-all ${
                     isActive
-                      ? 'bg-sky-600/15 text-sky-300 border border-sky-500/30'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                      ? 'bg-sky-600/15 text-sky-400 font-semibold border border-sky-500/30 shadow-xs'
+                      : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/70'
                   } ${collapsed ? 'justify-center px-0' : ''}`
                 }
               >

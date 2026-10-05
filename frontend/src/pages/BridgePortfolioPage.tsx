@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { bridgeService } from '../services/api/bridgeService';
-import { BridgeAsset, ConditionCategory, PriorityLevel, RiskLevel } from '../types/bridge';
+import { BridgeAsset } from '../types/bridge';
 import { RiskBadge } from '../components/common/RiskBadge';
 import { PriorityBadge } from '../components/common/PriorityBadge';
 import { ConditionBadge } from '../components/common/ConditionBadge';
 import { LoadingState } from '../components/common/LoadingState';
 import { ErrorState } from '../components/common/ErrorState';
 import { EmptyState } from '../components/common/EmptyState';
-import { Search, ArrowUpDown, X, ExternalLink } from 'lucide-react';
+import { Search, ArrowUpDown, ArrowUp, ArrowDown, X, ExternalLink, RotateCcw } from 'lucide-react';
 
 export const BridgePortfolioPage: React.FC = () => {
   const navigate = useNavigate();
@@ -55,6 +55,17 @@ export const BridgePortfolioPage: React.FC = () => {
     }
   }, [searchParams]);
 
+  // Usability: Escape key closes inspection drawer
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && inspectedBridge) {
+        setInspectedBridge(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [inspectedBridge]);
+
   const handleSort = (field: keyof BridgeAsset) => {
     if (sortField === field) {
       setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
@@ -62,6 +73,17 @@ export const BridgePortfolioPage: React.FC = () => {
       setSortField(field);
       setSortDirection('desc');
     }
+  };
+
+  const renderSortIndicator = (field: keyof BridgeAsset) => {
+    if (sortField === field) {
+      return sortDirection === 'asc' ? (
+        <ArrowUp className="w-3.5 h-3.5 text-sky-400 font-bold ml-1" />
+      ) : (
+        <ArrowDown className="w-3.5 h-3.5 text-sky-400 font-bold ml-1" />
+      );
+    }
+    return <ArrowUpDown className="w-3 h-3 text-slate-500 opacity-60 ml-1" />;
   };
 
   const filteredBridges = useMemo(() => {
@@ -92,6 +114,8 @@ export const BridgePortfolioPage: React.FC = () => {
       return sortDirection === 'asc' ? valA - valB : valB - valA;
     });
   }, [bridges, searchQuery, selectedRisk, selectedCondition, selectedPriority, selectedAction, sortField, sortDirection]);
+
+  const hasActiveFilters = searchQuery !== '' || selectedRisk !== 'All' || selectedCondition !== 'All' || selectedPriority !== 'All' || selectedAction !== 'All';
 
   const resetFilters = () => {
     setSearchQuery('');
@@ -126,14 +150,18 @@ export const BridgePortfolioPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={resetFilters}
-            className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 transition-colors"
-          >
-            Reset Filters
-          </button>
-        </div>
+        {hasActiveFilters && (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={resetFilters}
+              aria-label="Reset all search and filter parameters"
+              className="px-3 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors flex items-center gap-1.5"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Reset Filters
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Filter and Search Bar */}
@@ -141,9 +169,10 @@ export const BridgePortfolioPage: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-3">
           {/* Search Box */}
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
+              aria-label="Filter bridges by ID, name, or route"
               placeholder="Search by ID, name, route, or river..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -153,8 +182,10 @@ export const BridgePortfolioPage: React.FC = () => {
 
           {/* Risk Level Filter */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400 font-mono">Risk:</span>
+            <label htmlFor="filter-risk" className="text-xs text-slate-400 font-mono">Risk:</label>
             <select
+              id="filter-risk"
+              aria-label="Filter by Risk Category"
               value={selectedRisk}
               onChange={(e) => setSelectedRisk(e.target.value)}
               className="bg-slate-950 border border-slate-800 rounded-md px-2.5 py-2 text-xs text-slate-200 focus:outline-none focus:border-sky-500"
@@ -169,8 +200,10 @@ export const BridgePortfolioPage: React.FC = () => {
 
           {/* Condition Filter */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400 font-mono">Condition:</span>
+            <label htmlFor="filter-condition" className="text-xs text-slate-400 font-mono">Condition:</label>
             <select
+              id="filter-condition"
+              aria-label="Filter by Structural Condition Category"
               value={selectedCondition}
               onChange={(e) => setSelectedCondition(e.target.value)}
               className="bg-slate-950 border border-slate-800 rounded-md px-2.5 py-2 text-xs text-slate-200 focus:outline-none focus:border-sky-500"
@@ -185,8 +218,10 @@ export const BridgePortfolioPage: React.FC = () => {
 
           {/* Priority Level */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400 font-mono">Priority:</span>
+            <label htmlFor="filter-priority" className="text-xs text-slate-400 font-mono">Priority:</label>
             <select
+              id="filter-priority"
+              aria-label="Filter by Priority Level"
               value={selectedPriority}
               onChange={(e) => setSelectedPriority(e.target.value)}
               className="bg-slate-950 border border-slate-800 rounded-md px-2.5 py-2 text-xs text-slate-200 focus:outline-none focus:border-sky-500"
@@ -208,70 +243,77 @@ export const BridgePortfolioPage: React.FC = () => {
         <div className="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950/80 text-slate-400 font-mono border-b border-slate-800">
+              <thead className="bg-slate-950/80 text-slate-400 font-mono border-b border-slate-800 select-none">
                 <tr>
                   <th 
-                    className="py-3 px-4 cursor-pointer hover:text-slate-200"
+                    className="py-3 px-4 cursor-pointer hover:text-slate-100 transition-colors"
                     onClick={() => handleSort('id')}
+                    title="Sort by Bridge ID"
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center">
                       Bridge ID / Name
-                      <ArrowUpDown className="w-3 h-3" />
+                      {renderSortIndicator('id')}
                     </div>
                   </th>
                   <th 
-                    className="py-3 px-4 cursor-pointer hover:text-slate-200"
+                    className="py-3 px-4 cursor-pointer hover:text-slate-100 transition-colors"
                     onClick={() => handleSort('yearBuilt')}
+                    title="Sort by Age / Built Year"
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center">
                       Age / Built
-                      <ArrowUpDown className="w-3 h-3" />
+                      {renderSortIndicator('yearBuilt')}
                     </div>
                   </th>
                   <th className="py-3 px-4">Condition</th>
                   <th 
-                    className="py-3 px-4 cursor-pointer hover:text-slate-200"
+                    className="py-3 px-4 cursor-pointer hover:text-slate-100 transition-colors"
                     onClick={() => handleSort('adt')}
+                    title="Sort by Traffic Volume (ADT)"
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center">
                       Traffic (ADT)
-                      <ArrowUpDown className="w-3 h-3" />
+                      {renderSortIndicator('adt')}
                     </div>
                   </th>
                   <th 
-                    className="py-3 px-4 cursor-pointer hover:text-slate-200"
+                    className="py-3 px-4 cursor-pointer hover:text-slate-100 transition-colors"
                     onClick={() => handleSort('modeledRiskScore')}
+                    title="Sort by Modeled Risk Score"
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center">
                       Modeled Risk
-                      <ArrowUpDown className="w-3 h-3" />
+                      {renderSortIndicator('modeledRiskScore')}
                     </div>
                   </th>
                   <th 
-                    className="py-3 px-4 cursor-pointer hover:text-slate-200"
+                    className="py-3 px-4 cursor-pointer hover:text-slate-100 transition-colors"
                     onClick={() => handleSort('consequenceScore')}
+                    title="Sort by Consequence Score"
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center">
                       Consequence
-                      <ArrowUpDown className="w-3 h-3" />
+                      {renderSortIndicator('consequenceScore')}
                     </div>
                   </th>
                   <th 
-                    className="py-3 px-4 cursor-pointer hover:text-slate-200"
+                    className="py-3 px-4 cursor-pointer hover:text-slate-100 transition-colors"
                     onClick={() => handleSort('priorityScore')}
+                    title="Sort by Priority Score"
                   >
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center">
                       Priority Score
-                      <ArrowUpDown className="w-3 h-3" />
+                      {renderSortIndicator('priorityScore')}
                     </div>
                   </th>
                   <th 
-                    className="py-3 px-4 text-right cursor-pointer hover:text-slate-200"
+                    className="py-3 px-4 text-right cursor-pointer hover:text-slate-100 transition-colors"
                     onClick={() => handleSort('estimatedInterventionCostCr')}
+                    title="Sort by Estimated Intervention Cost"
                   >
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-end">
                       Cost (Est.)
-                      <ArrowUpDown className="w-3 h-3" />
+                      {renderSortIndicator('estimatedInterventionCostCr')}
                     </div>
                   </th>
                   <th className="py-3 px-4">Deferral Sensitivity</th>
@@ -282,7 +324,7 @@ export const BridgePortfolioPage: React.FC = () => {
                 {filteredBridges.map((bridge) => (
                   <tr 
                     key={bridge.id} 
-                    className="hover:bg-slate-800/50 cursor-pointer transition-colors"
+                    className="hover:bg-sky-500/5 dark:hover:bg-slate-800/60 cursor-pointer transition-colors"
                     onClick={() => setInspectedBridge(bridge)}
                   >
                     <td className="py-3.5 px-4">
@@ -314,12 +356,12 @@ export const BridgePortfolioPage: React.FC = () => {
                       ₹{bridge.estimatedInterventionCostCr.toFixed(1)} Cr
                     </td>
                     <td className="py-3.5 px-4">
-                      <span className={`text-[11px] px-2 py-0.5 rounded font-medium ${
+                      <span className={`text-[11px] px-2 py-0.5 rounded font-medium border ${
                         bridge.deferralSensitivity === 'High deferral sensitivity'
-                          ? 'bg-rose-950/60 text-rose-300 border border-rose-800'
+                          ? 'bg-rose-50 text-rose-800 border-rose-300 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800'
                           : bridge.deferralSensitivity === 'Prioritize before deferral'
-                          ? 'bg-amber-950/60 text-amber-300 border border-amber-800'
-                          : 'bg-slate-800 text-slate-400'
+                          ? 'bg-amber-50 text-amber-800 border-amber-300 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800'
+                          : 'bg-slate-100 text-slate-600 border-slate-300 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'
                       }`}>
                         {bridge.deferralSensitivity}
                       </span>
@@ -330,8 +372,9 @@ export const BridgePortfolioPage: React.FC = () => {
                           e.stopPropagation();
                           navigate(`/bridges/${bridge.id}`);
                         }}
-                        className="p-1.5 rounded bg-slate-800 hover:bg-sky-600 hover:text-white text-slate-300 border border-slate-700 transition-colors"
+                        aria-label={`View complete engineering dossier for ${bridge.id}`}
                         title="View Complete Engineering Dossier"
+                        className="p-1.5 rounded-md bg-slate-800 hover:bg-sky-600 hover:text-white text-slate-300 border border-slate-700 transition-colors"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                       </button>
@@ -344,97 +387,114 @@ export const BridgePortfolioPage: React.FC = () => {
         </div>
       )}
 
-      {/* Quick Inspection Drawer / Modal */}
+      {/* Quick Inspection Drawer with Backdrop */}
       {inspectedBridge && (
-        <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-slate-900 border-l border-slate-800 p-6 shadow-2xl z-40 flex flex-col justify-between overflow-y-auto">
-          <div>
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-              <div>
-                <span className="text-[10px] font-mono text-slate-400">QUICK ASSET PREVIEW</span>
-                <h3 className="text-base font-bold font-mono text-sky-400">{inspectedBridge.id}</h3>
+        <div className="fixed inset-0 z-40 overflow-hidden">
+          {/* Backdrop (click to close) */}
+          <div 
+            onClick={() => setInspectedBridge(null)}
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity"
+            aria-hidden="true"
+          />
+
+          {/* Drawer Panel */}
+          <div 
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Asset preview for ${inspectedBridge.id}`}
+            className="fixed inset-y-0 right-0 w-full sm:w-96 bg-slate-900 border-l border-slate-800 p-6 shadow-2xl z-50 flex flex-col justify-between overflow-y-auto"
+          >
+            <div>
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                <div>
+                  <span className="text-[10px] font-mono text-slate-400">QUICK ASSET PREVIEW (ESC TO CLOSE)</span>
+                  <h3 className="text-base font-bold font-mono text-sky-400">{inspectedBridge.id}</h3>
+                </div>
+                <button 
+                  onClick={() => setInspectedBridge(null)}
+                  aria-label="Close preview drawer"
+                  title="Close preview (Esc)"
+                  className="p-1.5 rounded-md text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
-              <button 
-                onClick={() => setInspectedBridge(null)}
-                className="p-1 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+
+              <div className="space-y-4 text-xs">
+                <div>
+                  <h4 className="font-semibold text-slate-100 text-sm">{inspectedBridge.name}</h4>
+                  <p className="text-slate-400 text-[11px] mt-0.5">{inspectedBridge.route} • {inspectedBridge.featureIntersected}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                  <div>
+                    <span className="text-slate-400 text-[10px]">Condition</span>
+                    <div className="mt-1">
+                      <ConditionBadge category={inspectedBridge.conditionCategory} rating={inspectedBridge.condition.overallCondition} />
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 text-[10px]">Priority</span>
+                    <div className="mt-1">
+                      <PriorityBadge level={inspectedBridge.priorityLevel} score={inspectedBridge.priorityScore} />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="text-slate-400 block mb-1">NBI Component Breakdown (0-9):</span>
+                  <div className="grid grid-cols-3 gap-2 text-center font-mono">
+                    <div className="p-2 bg-slate-950 rounded border border-slate-800">
+                      <div className="text-[10px] text-slate-400">Deck</div>
+                      <div className="text-sm font-bold text-slate-200">{inspectedBridge.condition.deck}/9</div>
+                    </div>
+                    <div className="p-2 bg-slate-950 rounded border border-slate-800">
+                      <div className="text-[10px] text-slate-400">Super</div>
+                      <div className="text-sm font-bold text-slate-200">{inspectedBridge.condition.superstructure}/9</div>
+                    </div>
+                    <div className="p-2 bg-slate-950 rounded border border-slate-800">
+                      <div className="text-[10px] text-slate-400">Sub</div>
+                      <div className="text-sm font-bold text-slate-200">{inspectedBridge.condition.substructure}/9</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Traffic Exposure:</span>
+                    <span className="font-mono text-slate-200">{inspectedBridge.adt.toLocaleString()} ADT ({inspectedBridge.adttPercent}% Trucks)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Bypass Detour Length:</span>
+                    <span className="font-mono text-slate-200">{inspectedBridge.detourLengthKm} km</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Intervention Cost Est:</span>
+                    <span className="font-mono font-bold text-sky-400">₹{inspectedBridge.estimatedInterventionCostCr} Cr</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">2-Year Deferral Cost Multiplier:</span>
+                    <span className="font-mono font-bold text-rose-400">{inspectedBridge.costOfDelayMultiplier2Year}x</span>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-slate-950/60 rounded-lg border border-slate-800">
+                  <span className="text-[10px] text-slate-400 uppercase font-mono block mb-1">Recommended Action</span>
+                  <p className="font-medium text-slate-200">{inspectedBridge.recommendedAction}</p>
+                  <p className="text-[11px] text-slate-400 mt-1">{inspectedBridge.deferralNarrative}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-slate-800">
+              <button
+                onClick={() => navigate(`/bridges/${inspectedBridge.id}`)}
+                className="w-full py-2.5 rounded-md bg-sky-600 hover:bg-sky-500 text-white font-medium text-xs transition-colors flex items-center justify-center gap-2 shadow-xs"
               >
-                <X className="w-4 h-4" />
+                Open Full Engineering Detail Dossier
+                <ExternalLink className="w-3.5 h-3.5" />
               </button>
             </div>
-
-            <div className="space-y-4 text-xs">
-              <div>
-                <h4 className="font-semibold text-slate-100 text-sm">{inspectedBridge.name}</h4>
-                <p className="text-slate-400 text-[11px] mt-0.5">{inspectedBridge.route} • {inspectedBridge.featureIntersected}</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 p-3 rounded bg-slate-950/80 border border-slate-800">
-                <div>
-                  <span className="text-slate-400 text-[10px]">Condition</span>
-                  <div className="mt-1">
-                    <ConditionBadge category={inspectedBridge.conditionCategory} rating={inspectedBridge.condition.overallCondition} />
-                  </div>
-                </div>
-                <div>
-                  <span className="text-slate-400 text-[10px]">Priority</span>
-                  <div className="mt-1">
-                    <PriorityBadge level={inspectedBridge.priorityLevel} score={inspectedBridge.priorityScore} />
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <span className="text-slate-400 block mb-1">NBI Component Breakdown (0-9):</span>
-                <div className="grid grid-cols-3 gap-2 text-center font-mono">
-                  <div className="p-2 bg-slate-950 rounded border border-slate-800">
-                    <div className="text-[10px] text-slate-400">Deck</div>
-                    <div className="text-sm font-bold text-slate-200">{inspectedBridge.condition.deck}/9</div>
-                  </div>
-                  <div className="p-2 bg-slate-950 rounded border border-slate-800">
-                    <div className="text-[10px] text-slate-400">Super</div>
-                    <div className="text-sm font-bold text-slate-200">{inspectedBridge.condition.superstructure}/9</div>
-                  </div>
-                  <div className="p-2 bg-slate-950 rounded border border-slate-800">
-                    <div className="text-[10px] text-slate-400">Sub</div>
-                    <div className="text-sm font-bold text-slate-200">{inspectedBridge.condition.substructure}/9</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Traffic Exposure:</span>
-                  <span className="font-mono text-slate-200">{inspectedBridge.adt.toLocaleString()} ADT ({inspectedBridge.adttPercent}% Trucks)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Bypass Detour Length:</span>
-                  <span className="font-mono text-slate-200">{inspectedBridge.detourLengthKm} km</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Intervention Cost Est:</span>
-                  <span className="font-mono font-bold text-sky-400">₹{inspectedBridge.estimatedInterventionCostCr} Cr</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">2-Year Deferral Cost Multiplier:</span>
-                  <span className="font-mono font-bold text-rose-400">{inspectedBridge.costOfDelayMultiplier2Year}x</span>
-                </div>
-              </div>
-
-              <div className="p-3 bg-slate-950/60 rounded border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase font-mono block mb-1">Recommended Action</span>
-                <p className="font-medium text-slate-200">{inspectedBridge.recommendedAction}</p>
-                <p className="text-[11px] text-slate-400 mt-1">{inspectedBridge.deferralNarrative}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 pt-4 border-t border-slate-800">
-            <button
-              onClick={() => navigate(`/bridges/${inspectedBridge.id}`)}
-              className="w-full py-2.5 rounded bg-sky-600 hover:bg-sky-500 text-white font-medium text-xs transition-colors flex items-center justify-center gap-2"
-            >
-              Open Full Engineering Detail Dossier
-              <ExternalLink className="w-3.5 h-3.5" />
-            </button>
           </div>
         </div>
       )}

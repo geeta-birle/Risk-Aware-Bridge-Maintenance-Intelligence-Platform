@@ -2,13 +2,13 @@
 
 **Platform:** Bridge Maintenance Intelligence Platform  
 **System Role:** Explainable decision-support platform for prioritizing bridge maintenance under limited budgets  
-**Current Phase:** Phase 14 COMPLETED – UI-First Architecture, Design System, Mock Layer & All 10 Screens Fully Interactive  
+**Current Phase:** Phase 14.1 COMPLETED – Frontend Small Polish Pass (Typography, Light/Dark Toggle, Sidebar, Usability)  
 **Last Updated:** 2026-10-05  
 
 ---
 
 ## 1. Executive Summary & Progress Tracker
-The first major project milestone (**UI-First Phase 1–14**) has been successfully completed and verified. The frontend is fully functional, type-safe, built with React 19, TypeScript, Tailwind CSS, Lucide icons, and Recharts, and verified through a clean production build (`npm run build`).
+The UI-First milestone and subsequent **Small Polish Pass** have been successfully executed and verified. The frontend retains 100% of its existing layout, page structure, routing, components, and mock data contracts while benefiting from soft typography, seamless theme persistence, and ergonomic improvements.
 
 | Phase | Description | Status | Implementation Notes |
 |---|---|---|---|
@@ -27,21 +27,26 @@ The first major project milestone (**UI-First Phase 1–14**) has been successfu
 | **Phase 12**| Screen 8: Analytics & Baselines | **COMPLETED** | Head-to-head empirical comparison (Risk-Aware Optimization vs Worst-Condition-First vs Traffic Heuristic), validation metrics. |
 | **Phase 13**| Screen 9: Methodology | **COMPLETED** | 8-step visual end-to-end pipeline, LaTeX-style mathematical formulations, data source boundaries (NBI core vs optional GIS/CV). |
 | **Phase 14**| Screen 10: Settings | **COMPLETED** | Decision weight calibration sliders ($w_1, w_2, w_3, w_4$), sum-to-1.0 normalization validator, currency and horizon toggles. |
+| **Phase 14.1**| Frontend Small Polish Pass | **COMPLETED** | Softer typography (Manrope/Inter), Light/Dark theme toggle with localStorage persistence, active sidebar indicator, drawer Escape listener, table sort arrows. |
 | **Phase 15**| NBI Data Ingestion Pipeline | **NEXT UP** | Inspecting authentic FHWA NBI records, schema extraction, and missing value profiling. |
 | **Phase 16+**| ML Deterioration & Risk Engine | **SCHEDULED** | Baseline models, longitudinal Markov/GBDT deterioration models, FastAPI backend integration. |
 
 ---
 
-## 2. Key Architectural Decisions
-1. **Defensible Engineering Design & Non-Fabrication**:
-   - Simulation dataset is explicitly badged (`[SIMULATION DATASET]`).
-   - No arbitrary collapse probability is claimed.
-   - Clear distinction between empirical inspection ratings (0–9 scale), modeled risk indices (0–100), and public consequence scores.
-2. **Clean API Abstraction**:
-   - All UI components consume typed services in `frontend/src/services/api/`.
-   - Transitioning from mock services to a real FastAPI/Python backend will require changing only the service layer implementation, with zero alterations to UI components.
-3. **Dynamic Resource Solver**:
-   - The knapsack budget optimizer (`src/mock/optimization.ts`) runs an in-memory solver reacting immediately to budget slider adjustments in Screen 5, demonstrating full scenario planning capability.
+## 2. Key Architectural Decisions & Polish Pass Enhancements
+1. **Softer Typography**:
+   - Introduced `Manrope` as the primary sans font, with `Inter` fallback and `JetBrains Mono` for engineering metrics.
+   - Preserves exact font sizes, line heights, bounding boxes, and component alignments.
+2. **Light / Dark Mode Persistence**:
+   - Implemented `ThemeContext` storing selected preference (`light` or `dark`) in `localStorage` under `bridge_intel_theme`.
+   - Utilizes CSS custom property tokens in `index.css` mapped dynamically to Tailwind's slate palette, providing natural contrast in light mode and preserving the dark baseline.
+   - Sun/Moon icon toggle added cleanly to Topbar.
+3. **Ergonomic Usability Fixes**:
+   - Added `Escape` key and backdrop-click handlers to close the Bridge Portfolio quick-preview drawer.
+   - Added clearer sorting indicators (`ArrowUp` when ascending, `ArrowDown` when descending, subtle `ArrowUpDown` when idle).
+   - Added instant search clear button (`X`) when a query is entered in Topbar.
+   - Added accessible labels (`aria-label`, `title`) across all icon buttons and interactive controls.
+   - Verified "Reset to Default" button on Settings page with confirmation feedback.
 
 ---
 
