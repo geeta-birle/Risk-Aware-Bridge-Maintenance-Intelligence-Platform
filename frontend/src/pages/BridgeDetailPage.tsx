@@ -7,6 +7,7 @@ import { PriorityBadge } from '../components/common/PriorityBadge';
 import { ConditionBadge } from '../components/common/ConditionBadge';
 import { ExplanationPanel } from '../components/common/ExplanationPanel';
 import { ConditionTrendChart } from '../components/charts/ConditionTrendChart';
+import { LiveDeteriorationScorer } from '../components/common/LiveDeteriorationScorer';
 import { LoadingState } from '../components/common/LoadingState';
 import { ErrorState } from '../components/common/ErrorState';
 import { 
@@ -217,6 +218,9 @@ export const BridgeDetailPage: React.FC = () => {
               totalScore={bridge.modeledRiskScore}
             />
           </div>
+
+          {/* Live REST API Deterioration Risk Scorer */}
+          <LiveDeteriorationScorer bridge={bridge} />
         </div>
 
         {/* Section D: Public & Network Consequence */}

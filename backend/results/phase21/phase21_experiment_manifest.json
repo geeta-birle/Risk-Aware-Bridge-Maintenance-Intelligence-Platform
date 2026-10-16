@@ -1,0 +1,198 @@
+{
+  "execution_date": "2026-10-13T22:23:00.566596",
+  "total_runtime_seconds": 111.41,
+  "split_sizes": {
+    "train": 304541,
+    "val": 65089,
+    "test": 65580
+  },
+  "candidates_evaluated": 6,
+  "candidate_summary_table": [
+    {
+      "id": "candidate_0_champion_baseline",
+      "name": "Phase 20 Champion Baseline",
+      "val_pr_auc": 0.298462013642521,
+      "val_roc_auc": 0.7633164660859271,
+      "optimal_val_threshold_tau": 0.6849999999999999,
+      "val_f1_at_optimal": 0.3392871445734882,
+      "val_f1_at_068": 0.33837710701685614,
+      "fit_time_seconds": 4.25
+    },
+    {
+      "id": "candidate_1_regularized_l2",
+      "name": "L2-Regularized & Larger Leaf Support",
+      "val_pr_auc": 0.3035909631184488,
+      "val_roc_auc": 0.7660345023078352,
+      "optimal_val_threshold_tau": 0.6599999999999999,
+      "val_f1_at_optimal": 0.3452716880109978,
+      "val_f1_at_068": 0.34249171009000473,
+      "fit_time_seconds": 2.82
+    },
+    {
+      "id": "candidate_2_deep_interactions",
+      "name": "Higher Capacity with Interaction Depth",
+      "val_pr_auc": 0.3084150485734147,
+      "val_roc_auc": 0.7693659755419355,
+      "optimal_val_threshold_tau": 0.6599999999999999,
+      "val_f1_at_optimal": 0.3452931249541419,
+      "val_f1_at_068": 0.34393891186764236,
+      "fit_time_seconds": 3.71
+    },
+    {
+      "id": "candidate_3_conservative_learning",
+      "name": "Conservative Learning Rate (eta=0.05)",
+      "val_pr_auc": 0.2990385348547806,
+      "val_roc_auc": 0.7628182059993973,
+      "optimal_val_threshold_tau": 0.6549999999999999,
+      "val_f1_at_optimal": 0.33892045454545455,
+      "val_f1_at_068": 0.3349972268441486,
+      "fit_time_seconds": 3.97
+    },
+    {
+      "id": "candidate_4_depth_constrained",
+      "name": "Depth-Constrained Shallow Ensemble (max_depth=6)",
+      "val_pr_auc": 0.2994707848476486,
+      "val_roc_auc": 0.7623263718484844,
+      "optimal_val_threshold_tau": 0.6699999999999999,
+      "val_f1_at_optimal": 0.3383921863260706,
+      "val_f1_at_068": 0.33573441904165363,
+      "fit_time_seconds": 2.89
+    },
+    {
+      "id": "candidate_5_unweighted_native",
+      "name": "Unweighted Native Prevalence Estimator",
+      "val_pr_auc": 0.30784306817494433,
+      "val_roc_auc": 0.7633500347992055,
+      "optimal_val_threshold_tau": 0.16999999999999998,
+      "val_f1_at_optimal": 0.34445867550666764,
+      "val_f1_at_068": 0.04430165708488333,
+      "fit_time_seconds": 2.7
+    }
+  ],
+  "selected_candidate": {
+    "id": "candidate_2_deep_interactions",
+    "name": "Higher Capacity with Interaction Depth",
+    "params": {
+      "class_weight": "balanced",
+      "max_iter": 150,
+      "learning_rate": 0.08,
+      "max_leaf_nodes": 63,
+      "min_samples_leaf": 40,
+      "l2_regularization": 0.5,
+      "early_stopping": true,
+      "validation_fraction": 0.1,
+      "random_state": 42
+    },
+    "optimal_threshold": 0.6599999999999999
+  },
+  "calibration_results": {
+    "candidate_id": "candidate_2_deep_interactions",
+    "calibrator_type": "Platt Scaling (LogisticRegression)",
+    "platt_coefficients": {
+      "A_slope": 1.0732189289896332,
+      "B_intercept": -2.222097669889043
+    },
+    "assessment_sample_size": 32545,
+    "uncalibrated_metrics": {
+      "brier_score": 0.18070399821603622,
+      "log_loss": 0.538755684762822,
+      "ece": 0.3037628165135638,
+      "mce": 0.49676931533204044
+    },
+    "calibrated_metrics": {
+      "brier_score": 0.07126379689939537,
+      "log_loss": 0.255427645472272,
+      "ece": 0.00425845808336335,
+      "mce": 0.08809747351965458,
+      "calibration_slope": 1.0594802253573494,
+      "calibration_intercept": -2.2302695145979676,
+      "calibration_in_the_large": 0.0008361510418158635
+    }
+  },
+  "test_comparison": {
+    "champion_metrics": {
+      "pr_auc": 0.29433545412630135,
+      "roc_auc": 0.762454567562509,
+      "precision": 0.30377035132819197,
+      "recall": 0.3640253294540476,
+      "f1": 0.33117944725574155,
+      "accuracy": 0.8689996950289722,
+      "balanced_accuracy": 0.6412088078209187,
+      "specificity": 0.9183922861877898,
+      "fpr": 0.08160771381221019,
+      "fnr": 0.6359746705459525,
+      "confusion_matrix": {
+        "tn": 54862,
+        "fp": 4875,
+        "fn": 3716,
+        "tp": 2127
+      }
+    },
+    "candidate_metrics_at_optimal_tau": {
+      "pr_auc": 0.3042511577627578,
+      "roc_auc": 0.7713820246440433,
+      "precision": 0.29799390553580496,
+      "recall": 0.40167722060585315,
+      "f1": 0.34215321816458927,
+      "accuracy": 0.862381823726746,
+      "balanced_accuracy": 0.6545607590549563,
+      "specificity": 0.9074442975040594,
+      "fpr": 0.09255570249594054,
+      "fnr": 0.5983227793941468,
+      "confusion_matrix": {
+        "tn": 54208,
+        "fp": 5529,
+        "fn": 3496,
+        "tp": 2347
+      }
+    },
+    "candidate_metrics_at_tau_068": {
+      "pr_auc": 0.3042511577627578,
+      "roc_auc": 0.7713820246440433,
+      "precision": 0.3150484012907011,
+      "recall": 0.3676193736094472,
+      "f1": 0.3393096911776321,
+      "accuracy": 0.8724458676425739,
+      "balanced_accuracy": 0.6447216843941572,
+      "specificity": 0.9218239951788674,
+      "fpr": 0.07817600482113263,
+      "fnr": 0.6323806263905528,
+      "confusion_matrix": {
+        "tn": 55067,
+        "fp": 4670,
+        "fn": 3695,
+        "tp": 2148
+      }
+    },
+    "paired_bootstrap_differences": {
+      "b_samples": 1000,
+      "delta_pr_auc": {
+        "mean": 0.009914192805190937,
+        "ci_95": [
+          0.007369849941012782,
+          0.0123987776336371
+        ]
+      },
+      "delta_roc_auc": {
+        "mean": 0.008947742167949638,
+        "ci_95": [
+          0.007446036131115849,
+          0.010576711148154384
+        ]
+      },
+      "delta_f1": {
+        "mean": 0.011018289143759984,
+        "ci_95": [
+          0.006083712505058842,
+          0.01581931321168142
+        ]
+      },
+      "statistically_significant": true
+    }
+  },
+  "artifact_checksums": {
+    "candidate_model": "210bf46945d6e91c5e7968eb5e96038d38682de3e492a1cba6caffe15a017fde",
+    "candidate_calibrator": "103468868d2f4a2e01895127af07549fe868414d89432507af9981eaa6f8eb1c",
+    "candidate_encoder": "14fe2087570446889226640ebb8508e7e832be9b2241c9f92407f9a3f10c6772"
+  }
+}

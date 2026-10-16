@@ -1,0 +1,848 @@
+{
+  "phase": "Phase 21B: Hyperparameter Tuning, Regularization and Validation",
+  "generated_at": "2026-10-14T16:42:46.182735",
+  "total_runtime_seconds": 372.5,
+  "environment": {
+    "scikit_learn_version": "1.6.1",
+    "python_version": "3.9.12",
+    "numpy_version": "2.0.2",
+    "pandas_version": "2.3.3"
+  },
+  "pre_experiment_frozen_hashes": {
+    "phase20_champion": "e2b4e2ec334c18b343a55b1bc26395b3684f76678cfa80d4ccc9edf588b6da0b",
+    "phase21_candidate": "210bf46945d6e91c5e7968eb5e96038d38682de3e492a1cba6caffe15a017fde"
+  },
+  "split_and_validation_design": {
+    "dataset_path": "D:\\sem 3\\Deep Learning\\project\\backend\\data\\processed\\bridge_deck_condition_2023_2025.csv",
+    "total_records": 435210,
+    "train_partition_records": 304541,
+    "unique_bridge_ids_in_train": 304541,
+    "cross_validation_strategy": "5-fold StratifiedKFold inside training partition",
+    "cv_random_state": 42,
+    "encoder_policy": "Fitted strictly inside each fold's training subset; zero leakage",
+    "early_stopping_policy": "validation_fraction=0.1 on each fold's training subset"
+  },
+  "search_space_12_configurations": [
+    {
+      "id": "C0_p20_champion",
+      "name": "Phase 20 Champion Baseline",
+      "params": {
+        "learning_rate": 0.1,
+        "max_iter": 100,
+        "max_leaf_nodes": 31,
+        "min_samples_leaf": 20,
+        "l2_regularization": 0.0,
+        "class_weight": "balanced"
+      },
+      "hypothesis": "Baseline reference architecture from Phase 17/20.",
+      "mean_cv_pr_auc": 0.2893855863641982,
+      "std_cv_pr_auc": 0.007257824209710084,
+      "mean_cv_roc_auc": 0.7642411607162587,
+      "std_cv_roc_auc": 0.0037039559967991667,
+      "pooled_oof_pr_auc": 0.28900819892494234,
+      "total_cv_runtime_sec": 16.01,
+      "avg_iterations": 100.0,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.29207831610185386,
+          "roc_auc": 0.7636465514613355,
+          "n_iter": 100,
+          "fit_time_sec": 4.83
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.3024862444072567,
+          "roc_auc": 0.7712162671584392,
+          "n_iter": 100,
+          "fit_time_sec": 2.93
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.28480799454042366,
+          "roc_auc": 0.7633814457913033,
+          "n_iter": 100,
+          "fit_time_sec": 2.84
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.2843480568259144,
+          "roc_auc": 0.7601368663260764,
+          "n_iter": 100,
+          "fit_time_sec": 2.72
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.28320731994554227,
+          "roc_auc": 0.7628246728441392,
+          "n_iter": 100,
+          "fit_time_sec": 2.69
+        }
+      ]
+    },
+    {
+      "id": "C1_p21_candidate",
+      "name": "Phase 21 Candidate Architecture",
+      "params": {
+        "learning_rate": 0.08,
+        "max_iter": 150,
+        "max_leaf_nodes": 63,
+        "min_samples_leaf": 40,
+        "l2_regularization": 0.5,
+        "class_weight": "balanced"
+      },
+      "hypothesis": "Deeper interaction capacity with moderate L2 regularization.",
+      "mean_cv_pr_auc": 0.29847258924934156,
+      "std_cv_pr_auc": 0.007548099813948199,
+      "mean_cv_roc_auc": 0.769210499123831,
+      "std_cv_roc_auc": 0.003889096953141969,
+      "pooled_oof_pr_auc": 0.2982364517257284,
+      "total_cv_runtime_sec": 19.96,
+      "avg_iterations": 125.6,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.3031658717785985,
+          "roc_auc": 0.7692554326038659,
+          "n_iter": 149,
+          "fit_time_sec": 4.62
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.3103580839750781,
+          "roc_auc": 0.7767217763130574,
+          "n_iter": 130,
+          "fit_time_sec": 4.1
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.29028073421570877,
+          "roc_auc": 0.7668669342975822,
+          "n_iter": 104,
+          "fit_time_sec": 3.45
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.2973856090388161,
+          "roc_auc": 0.7663532408655328,
+          "n_iter": 142,
+          "fit_time_sec": 4.36
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.2911726472385064,
+          "roc_auc": 0.7668551115391167,
+          "n_iter": 103,
+          "fit_time_sec": 3.42
+        }
+      ]
+    },
+    {
+      "id": "C2_deep_mod_l2",
+      "name": "Higher Capacity + Moderate L2 (leaves=63, l2=1.0)",
+      "params": {
+        "learning_rate": 0.08,
+        "max_iter": 200,
+        "max_leaf_nodes": 63,
+        "min_samples_leaf": 60,
+        "l2_regularization": 1.0,
+        "class_weight": "balanced"
+      },
+      "hypothesis": "Expands leaf nodes to 63 with min_samples_leaf=60 and L2=1.0 to prevent noisy interaction overfitting.",
+      "mean_cv_pr_auc": 0.2978882416737438,
+      "std_cv_pr_auc": 0.006702484291813202,
+      "mean_cv_roc_auc": 0.769626381804265,
+      "std_cv_roc_auc": 0.004363649472451251,
+      "pooled_oof_pr_auc": 0.29741771534904665,
+      "total_cv_runtime_sec": 20.75,
+      "avg_iterations": 129.6,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.30025731629033475,
+          "roc_auc": 0.7684449543791072,
+          "n_iter": 125,
+          "fit_time_sec": 4.14
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.31003738040037154,
+          "roc_auc": 0.7776045886023755,
+          "n_iter": 123,
+          "fit_time_sec": 3.96
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.2935738412266117,
+          "roc_auc": 0.7697448963951474,
+          "n_iter": 167,
+          "fit_time_sec": 4.95
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.2921824138546575,
+          "roc_auc": 0.7644030992276662,
+          "n_iter": 104,
+          "fit_time_sec": 3.61
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.29339025659674334,
+          "roc_auc": 0.7679343704170287,
+          "n_iter": 129,
+          "fit_time_sec": 4.1
+        }
+      ]
+    },
+    {
+      "id": "C3_deep_heavy_l2",
+      "name": "High Capacity + Heavy L2 (leaves=63, l2=5.0)",
+      "params": {
+        "learning_rate": 0.08,
+        "max_iter": 200,
+        "max_leaf_nodes": 63,
+        "min_samples_leaf": 40,
+        "l2_regularization": 5.0,
+        "class_weight": "balanced"
+      },
+      "hypothesis": "Stress-tests whether heavy L2 penalty (5.0) stabilizes deep tree structures.",
+      "mean_cv_pr_auc": 0.2995245781680206,
+      "std_cv_pr_auc": 0.008389902083021887,
+      "mean_cv_roc_auc": 0.7707406299081401,
+      "std_cv_roc_auc": 0.0045451105601808685,
+      "pooled_oof_pr_auc": 0.29929011494636576,
+      "total_cv_runtime_sec": 21.98,
+      "avg_iterations": 137.8,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.3023015351556891,
+          "roc_auc": 0.7696993661495253,
+          "n_iter": 123,
+          "fit_time_sec": 4.1
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.314812983404282,
+          "roc_auc": 0.7793006138086049,
+          "n_iter": 174,
+          "fit_time_sec": 5.26
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.2928203441769085,
+          "roc_auc": 0.7704444288118293,
+          "n_iter": 121,
+          "fit_time_sec": 3.94
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.2945585381117811,
+          "roc_auc": 0.7659541109120902,
+          "n_iter": 123,
+          "fit_time_sec": 4.01
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.2931294899914423,
+          "roc_auc": 0.7683046298586503,
+          "n_iter": 148,
+          "fit_time_sec": 4.68
+        }
+      ]
+    },
+    {
+      "id": "C4_mod_capacity_fine_l2",
+      "name": "Moderate Capacity + Fine L2 (lr=0.05, leaves=31, l2=0.5)",
+      "params": {
+        "learning_rate": 0.05,
+        "max_iter": 200,
+        "max_leaf_nodes": 31,
+        "min_samples_leaf": 40,
+        "l2_regularization": 0.5,
+        "class_weight": "balanced"
+      },
+      "hypothesis": "Reduces learning rate to 0.05 with standard 31 leaves and moderate L2 penalty.",
+      "mean_cv_pr_auc": 0.290122855335886,
+      "std_cv_pr_auc": 0.007106290117967864,
+      "mean_cv_roc_auc": 0.7650177435670742,
+      "std_cv_roc_auc": 0.003938105405722886,
+      "pooled_oof_pr_auc": 0.28979741283539306,
+      "total_cv_runtime_sec": 23.92,
+      "avg_iterations": 200.0,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.29289745687724755,
+          "roc_auc": 0.7634169862962661,
+          "n_iter": 200,
+          "fit_time_sec": 4.78
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.30288024631562716,
+          "roc_auc": 0.772504058073715,
+          "n_iter": 200,
+          "fit_time_sec": 4.7
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.284041318000872,
+          "roc_auc": 0.7642091744659927,
+          "n_iter": 200,
+          "fit_time_sec": 4.73
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.28584857669285113,
+          "roc_auc": 0.7608369410711281,
+          "n_iter": 200,
+          "fit_time_sec": 4.89
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.28494667879283236,
+          "roc_auc": 0.7641215579282693,
+          "n_iter": 200,
+          "fit_time_sec": 4.81
+        }
+      ]
+    },
+    {
+      "id": "C5_mod_capacity_high_support",
+      "name": "Moderate Capacity + High Leaf Support (leaves=31, min_leaf=100)",
+      "params": {
+        "learning_rate": 0.05,
+        "max_iter": 200,
+        "max_leaf_nodes": 31,
+        "min_samples_leaf": 100,
+        "l2_regularization": 1.0,
+        "class_weight": "balanced"
+      },
+      "hypothesis": "Requires high sample support (100) per terminal leaf to regularize rare categories.",
+      "mean_cv_pr_auc": 0.29074967623609815,
+      "std_cv_pr_auc": 0.0068584336829595185,
+      "mean_cv_roc_auc": 0.7653199778001675,
+      "std_cv_roc_auc": 0.003667944740784133,
+      "pooled_oof_pr_auc": 0.2904020081238232,
+      "total_cv_runtime_sec": 23.76,
+      "avg_iterations": 200.0,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.2943864357235051,
+          "roc_auc": 0.7650976706676516,
+          "n_iter": 200,
+          "fit_time_sec": 4.71
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.30257026266125087,
+          "roc_auc": 0.771946461465339,
+          "n_iter": 200,
+          "fit_time_sec": 4.73
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.2849086380099406,
+          "roc_auc": 0.764805703472229,
+          "n_iter": 200,
+          "fit_time_sec": 4.76
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.2869120546166811,
+          "roc_auc": 0.7606869160962287,
+          "n_iter": 200,
+          "fit_time_sec": 4.79
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.284970990169113,
+          "roc_auc": 0.7640631372993888,
+          "n_iter": 200,
+          "fit_time_sec": 4.77
+        }
+      ]
+    },
+    {
+      "id": "C6_slow_deep",
+      "name": "Slow Conservative Learning (lr=0.03, iter=300, leaves=63)",
+      "params": {
+        "learning_rate": 0.03,
+        "max_iter": 300,
+        "max_leaf_nodes": 63,
+        "min_samples_leaf": 40,
+        "l2_regularization": 0.5,
+        "class_weight": "balanced"
+      },
+      "hypothesis": "Tests whether very slow learning rate (0.03) with high iteration cap discovers smoother gradients.",
+      "mean_cv_pr_auc": 0.29737740548644914,
+      "std_cv_pr_auc": 0.007720927212396379,
+      "mean_cv_roc_auc": 0.7699916575499666,
+      "std_cv_roc_auc": 0.004182652746229082,
+      "pooled_oof_pr_auc": 0.2970393423744521,
+      "total_cv_runtime_sec": 44.5,
+      "avg_iterations": 278.4,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.3023685527811584,
+          "roc_auc": 0.7686437497416783,
+          "n_iter": 300,
+          "fit_time_sec": 8.99
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.3100475509911478,
+          "roc_auc": 0.7780346888952965,
+          "n_iter": 300,
+          "fit_time_sec": 9.05
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.289090219747712,
+          "roc_auc": 0.7686414191659632,
+          "n_iter": 232,
+          "fit_time_sec": 9.92
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.2926400647454712,
+          "roc_auc": 0.7657605827280373,
+          "n_iter": 260,
+          "fit_time_sec": 7.57
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.29274063916675624,
+          "roc_auc": 0.768877847218858,
+          "n_iter": 300,
+          "fit_time_sec": 8.96
+        }
+      ]
+    },
+    {
+      "id": "C7_slow_compact",
+      "name": "Slow Conservative + Compact (lr=0.03, iter=300, leaves=31)",
+      "params": {
+        "learning_rate": 0.03,
+        "max_iter": 300,
+        "max_leaf_nodes": 31,
+        "min_samples_leaf": 60,
+        "l2_regularization": 1.0,
+        "class_weight": "balanced"
+      },
+      "hypothesis": "Slow learning rate (0.03) combined with compact trees and higher minimum leaf support.",
+      "mean_cv_pr_auc": 0.2894953202036645,
+      "std_cv_pr_auc": 0.007087258795188981,
+      "mean_cv_roc_auc": 0.7648029143507227,
+      "std_cv_roc_auc": 0.0039581367587783215,
+      "pooled_oof_pr_auc": 0.28914813006274526,
+      "total_cv_runtime_sec": 35.09,
+      "avg_iterations": 300.0,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.29250547106401587,
+          "roc_auc": 0.7640957166868978,
+          "n_iter": 300,
+          "fit_time_sec": 6.96
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.3020865937210687,
+          "roc_auc": 0.7721495244600467,
+          "n_iter": 300,
+          "fit_time_sec": 6.96
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.28351244454887814,
+          "roc_auc": 0.7642641055507674,
+          "n_iter": 300,
+          "fit_time_sec": 6.94
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.28554974957872825,
+          "roc_auc": 0.7601774257090466,
+          "n_iter": 300,
+          "fit_time_sec": 7.23
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.28382234210563134,
+          "roc_auc": 0.763327799346855,
+          "n_iter": 300,
+          "fit_time_sec": 7.0
+        }
+      ]
+    },
+    {
+      "id": "C8_shallow_ensemble",
+      "name": "Shallow Ensemble (leaves=15, lr=0.10, l2=0.1)",
+      "params": {
+        "learning_rate": 0.1,
+        "max_iter": 150,
+        "max_leaf_nodes": 15,
+        "min_samples_leaf": 40,
+        "l2_regularization": 0.1,
+        "class_weight": "balanced"
+      },
+      "hypothesis": "Low complexity trees (15 leaves) to test if high depth is overfitting on inspection noise.",
+      "mean_cv_pr_auc": 0.28437331673739363,
+      "std_cv_pr_auc": 0.006974893017751286,
+      "mean_cv_roc_auc": 0.7605671762317338,
+      "std_cv_roc_auc": 0.003967901031110308,
+      "pooled_oof_pr_auc": 0.28401651075927614,
+      "total_cv_runtime_sec": 15.05,
+      "avg_iterations": 150.0,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.2869287179837765,
+          "roc_auc": 0.7592905839340456,
+          "n_iter": 150,
+          "fit_time_sec": 2.96
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.2969501193994797,
+          "roc_auc": 0.7677322378544308,
+          "n_iter": 150,
+          "fit_time_sec": 3.02
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.27997860345039965,
+          "roc_auc": 0.7611998824693074,
+          "n_iter": 150,
+          "fit_time_sec": 3.03
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.2781159587392903,
+          "roc_auc": 0.7558765159925247,
+          "n_iter": 150,
+          "fit_time_sec": 3.03
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.279893184114022,
+          "roc_auc": 0.7587366609083597,
+          "n_iter": 150,
+          "fit_time_sec": 3.01
+        }
+      ]
+    },
+    {
+      "id": "C9_unweighted_p21",
+      "name": "Unweighted Native Prevalence Baseline (class_weight=None)",
+      "params": {
+        "learning_rate": 0.08,
+        "max_iter": 150,
+        "max_leaf_nodes": 63,
+        "min_samples_leaf": 40,
+        "l2_regularization": 0.5,
+        "class_weight": null
+      },
+      "hypothesis": "Evaluates P21 deeper architecture under native unweighted loss (eliminates balanced score distortion).",
+      "mean_cv_pr_auc": 0.3090917708150923,
+      "std_cv_pr_auc": 0.006727067391448232,
+      "mean_cv_roc_auc": 0.7707723385591496,
+      "std_cv_roc_auc": 0.0037654661336132137,
+      "pooled_oof_pr_auc": 0.30882077101735617,
+      "total_cv_runtime_sec": 20.59,
+      "avg_iterations": 150.0,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.31168888711686443,
+          "roc_auc": 0.7700576608066723,
+          "n_iter": 150,
+          "fit_time_sec": 4.11
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.3208421449128735,
+          "roc_auc": 0.777650955983233,
+          "n_iter": 150,
+          "fit_time_sec": 4.11
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.3031183348929888,
+          "roc_auc": 0.7700264885378288,
+          "n_iter": 150,
+          "fit_time_sec": 4.24
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.3072184573671777,
+          "roc_auc": 0.7660842290462588,
+          "n_iter": 150,
+          "fit_time_sec": 3.83
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.3025910297855574,
+          "roc_auc": 0.7700423584217556,
+          "n_iter": 150,
+          "fit_time_sec": 4.3
+        }
+      ]
+    },
+    {
+      "id": "C10_unweighted_conservative",
+      "name": "Unweighted Conservative (lr=0.05, leaves=63, l2=1.0)",
+      "params": {
+        "learning_rate": 0.05,
+        "max_iter": 200,
+        "max_leaf_nodes": 63,
+        "min_samples_leaf": 60,
+        "l2_regularization": 1.0,
+        "class_weight": null
+      },
+      "hypothesis": "Unweighted model with slower learning rate (0.05) and higher leaf support.",
+      "mean_cv_pr_auc": 0.30959091217658424,
+      "std_cv_pr_auc": 0.007570216023607982,
+      "mean_cv_roc_auc": 0.7718024420966358,
+      "std_cv_roc_auc": 0.004071664245298625,
+      "pooled_oof_pr_auc": 0.3093316185478289,
+      "total_cv_runtime_sec": 28.45,
+      "avg_iterations": 200.0,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.3131835417655702,
+          "roc_auc": 0.7710146667426003,
+          "n_iter": 200,
+          "fit_time_sec": 5.76
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.3225565941045573,
+          "roc_auc": 0.779414689191679,
+          "n_iter": 200,
+          "fit_time_sec": 5.62
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.303885836451113,
+          "roc_auc": 0.7712169467636778,
+          "n_iter": 200,
+          "fit_time_sec": 5.58
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.3068176605760635,
+          "roc_auc": 0.7671796018558639,
+          "n_iter": 200,
+          "fit_time_sec": 5.79
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.30151092798561707,
+          "roc_auc": 0.7701863059293588,
+          "n_iter": 200,
+          "fit_time_sec": 5.7
+        }
+      ]
+    },
+    {
+      "id": "C11_heavy_reg_stress",
+      "name": "Extreme Regularization Stress-Test (leaves=63, l2=10.0, min_leaf=100)",
+      "params": {
+        "learning_rate": 0.08,
+        "max_iter": 150,
+        "max_leaf_nodes": 63,
+        "min_samples_leaf": 100,
+        "l2_regularization": 10.0,
+        "class_weight": "balanced"
+      },
+      "hypothesis": "Stress-tests extreme regularization parameters (L2=10, min_leaf=100) to find regularization saturation point.",
+      "mean_cv_pr_auc": 0.29982978405416894,
+      "std_cv_pr_auc": 0.008328423716103171,
+      "mean_cv_roc_auc": 0.7711256546680059,
+      "std_cv_roc_auc": 0.004487793945283114,
+      "pooled_oof_pr_auc": 0.29955075999620884,
+      "total_cv_runtime_sec": 21.98,
+      "avg_iterations": 138.2,
+      "fold_scores": [
+        {
+          "fold": 1,
+          "pr_auc": 0.30313500507258917,
+          "roc_auc": 0.7699572064514575,
+          "n_iter": 148,
+          "fit_time_sec": 4.59
+        },
+        {
+          "fold": 2,
+          "pr_auc": 0.3139167582082564,
+          "roc_auc": 0.7799063251120555,
+          "n_iter": 150,
+          "fit_time_sec": 4.79
+        },
+        {
+          "fold": 3,
+          "pr_auc": 0.2916020161508489,
+          "roc_auc": 0.7699224563982565,
+          "n_iter": 121,
+          "fit_time_sec": 3.94
+        },
+        {
+          "fold": 4,
+          "pr_auc": 0.2989729128816312,
+          "roc_auc": 0.7675672022471159,
+          "n_iter": 149,
+          "fit_time_sec": 4.66
+        },
+        {
+          "fold": 5,
+          "pr_auc": 0.29152222795751903,
+          "roc_auc": 0.7682750831311431,
+          "n_iter": 123,
+          "fit_time_sec": 4.0
+        }
+      ]
+    }
+  ],
+  "winning_selection": {
+    "rule": "Primary: Mean 5-Fold Cross-Validation PR-AUC; Secondary: Low Fold Variance and Complexity",
+    "winning_config_id": "C10_unweighted_conservative",
+    "winning_config_name": "Unweighted Conservative (lr=0.05, leaves=63, l2=1.0)",
+    "winning_params": {
+      "learning_rate": 0.05,
+      "max_iter": 200,
+      "max_leaf_nodes": 63,
+      "min_samples_leaf": 60,
+      "l2_regularization": 1.0,
+      "class_weight": null
+    },
+    "mean_cv_pr_auc": 0.30959091217658424,
+    "std_cv_pr_auc": 0.007570216023607982,
+    "pooled_oof_pr_auc": 0.3093316185478289
+  },
+  "training_out_of_fold_threshold": {
+    "selection_objective": "Max F1 score across 181 candidate thresholds on training OOF predictions",
+    "optimal_tau": 0.16499999999999998,
+    "oof_precision": 0.2921574414424083,
+    "oof_recall": 0.41044101017715795,
+    "oof_f1": 0.341342612184762,
+    "oof_balanced_accuracy": 0.6577727422302748,
+    "oof_specificity": 0.9051044742833917,
+    "oof_confusion_matrix": {
+      "tn": 251629,
+      "fp": 26382,
+      "fn": 15641,
+      "tp": 10889
+    }
+  },
+  "cross_fitted_out_of_sample_calibration": {
+    "method": "5-Fold Cross-Fitted Platt LogisticRegression on Training Out-of-Fold Decision Scores",
+    "uncalibrated_metrics": {
+      "brier_score": 0.07005816412222543,
+      "log_loss": 0.25201757356279825,
+      "ece": 0.00424096575494848,
+      "mce": 0.04764148109755417
+    },
+    "calibrated_metrics": {
+      "brier_score": 0.07001440535239498,
+      "log_loss": 0.25181039788630377,
+      "ece": 0.000648523741653069,
+      "mce": 0.01569368831950202,
+      "calibration_slope": 1.082270129040358,
+      "calibration_in_the_large": 6.289812851362209e-06
+    }
+  },
+  "state_subgroup_analysis": [
+    {
+      "state_code": "48",
+      "state_name": "Texas",
+      "total_bridges": 22499,
+      "positive_events": 1504,
+      "prevalence": 0.06684741544068626,
+      "pr_auc": 0.38288685779489606,
+      "roc_auc": 0.8121499768181888,
+      "precision": 0.38621887666473653,
+      "recall": 0.4434840425531915,
+      "f1": 0.4128752708139895
+    },
+    {
+      "state_code": "39",
+      "state_name": "Ohio",
+      "total_bridges": 16914,
+      "positive_events": 1735,
+      "prevalence": 0.10257774624571361,
+      "pr_auc": 0.271806279151303,
+      "roc_auc": 0.6987686613140822,
+      "precision": 0.2764056752496059,
+      "recall": 0.3031700288184438,
+      "f1": 0.2891698735568994
+    },
+    {
+      "state_code": "06",
+      "state_name": "California",
+      "total_bridges": 13986,
+      "positive_events": 895,
+      "prevalence": 0.06399256399256399,
+      "pr_auc": 0.21240009414860922,
+      "roc_auc": 0.7676793174038712,
+      "precision": 0.27596439169139464,
+      "recall": 0.20782122905027933,
+      "f1": 0.23709369024856597
+    },
+    {
+      "state_code": "29",
+      "state_name": "Missouri",
+      "total_bridges": 12877,
+      "positive_events": 1269,
+      "prevalence": 0.0985477984002485,
+      "pr_auc": 0.3154690156954238,
+      "roc_auc": 0.7599364911783346,
+      "precision": 0.28791092258748674,
+      "recall": 0.42789598108747046,
+      "f1": 0.34421553090332807
+    },
+    {
+      "state_code": "42",
+      "state_name": "Pennsylvania",
+      "total_bridges": 12473,
+      "positive_events": 863,
+      "prevalence": 0.06918944921029424,
+      "pr_auc": 0.2852189973209709,
+      "roc_auc": 0.7591097497562238,
+      "precision": 0.29042224510813597,
+      "recall": 0.3267670915411356,
+      "f1": 0.3075245365321701
+    }
+  ],
+  "new_artifact_checksums": {
+    "phase21b_tuned_model.joblib": "aa806c8185db465fd02536d2d4310638c499d41560ac759e0ea15d4a60f98443",
+    "phase21b_calibrator.joblib": "cd9d2f3833112e9fd90b5bd355646a1e68f50ac5218b038a95f0d31766c5978f",
+    "phase21b_encoder.joblib": "14fe2087570446889226640ebb8508e7e832be9b2241c9f92407f9a3f10c6772"
+  },
+  "labelled_audit_comparison_test": {
+    "disclaimer": "Audit comparison only; validation and test sets were previously examined in earlier phases.",
+    "test_sample_size": 65580,
+    "test_pr_auc": 0.3146602223378855,
+    "test_roc_auc": 0.771217098110618,
+    "test_threshold_used": 0.16499999999999998,
+    "test_precision": 0.2991065964998164,
+    "test_recall": 0.4182782817046038,
+    "test_f1": 0.34879406307977734,
+    "test_balanced_accuracy": 0.661204025262299,
+    "test_confusion_matrix": [
+      [
+        54010,
+        5727
+      ],
+      [
+        3399,
+        2444
+      ]
+    ]
+  },
+  "quality_gate_decision": "IMPROVEMENT ESTABLISHED"
+}

@@ -1,0 +1,252 @@
+{
+  "audit_phase": "Phase 21C: Phase 21B Reproducibility and Promotion-Readiness Audit",
+  "audit_timestamp": "2026-10-14T18:25:00+05:30",
+  "auditor": "Senior ML Engineer / Antigravity AI Pair Programmer",
+  "final_decision_gate": "READY WITH DOCUMENTED LIMITATIONS",
+  "experiment_design_reconciliation": {
+    "approved_configurations_count": 12,
+    "actual_configurations_count": 12,
+    "total_cv_fits": 60,
+    "configurations_ran": [
+      {
+        "id": "C0_p20_champion",
+        "name": "Phase 20 Champion Baseline",
+        "params": {"learning_rate": 0.1, "max_iter": 100, "max_leaf_nodes": 31, "min_samples_leaf": 20, "l2_regularization": 0.0, "class_weight": "balanced"}
+      },
+      {
+        "id": "C1_p21_candidate",
+        "name": "Phase 21 Candidate Architecture",
+        "params": {"learning_rate": 0.08, "max_iter": 150, "max_leaf_nodes": 63, "min_samples_leaf": 40, "l2_regularization": 0.5, "class_weight": "balanced"}
+      },
+      {
+        "id": "C2_deep_mod_l2",
+        "name": "Higher Capacity + Moderate L2",
+        "params": {"learning_rate": 0.08, "max_iter": 200, "max_leaf_nodes": 63, "min_samples_leaf": 60, "l2_regularization": 1.0, "class_weight": "balanced"}
+      },
+      {
+        "id": "C3_deep_heavy_l2",
+        "name": "High Capacity + Heavy L2",
+        "params": {"learning_rate": 0.08, "max_iter": 200, "max_leaf_nodes": 63, "min_samples_leaf": 40, "l2_regularization": 5.0, "class_weight": "balanced"}
+      },
+      {
+        "id": "C4_mod_capacity_fine_l2",
+        "name": "Moderate Capacity + Fine L2",
+        "params": {"learning_rate": 0.05, "max_iter": 200, "max_leaf_nodes": 31, "min_samples_leaf": 40, "l2_regularization": 0.5, "class_weight": "balanced"}
+      },
+      {
+        "id": "C5_mod_capacity_high_support",
+        "name": "Moderate Capacity + High Leaf Support",
+        "params": {"learning_rate": 0.05, "max_iter": 200, "max_leaf_nodes": 31, "min_samples_leaf": 100, "l2_regularization": 1.0, "class_weight": "balanced"}
+      },
+      {
+        "id": "C6_slow_deep",
+        "name": "Slow Conservative Learning",
+        "params": {"learning_rate": 0.03, "max_iter": 300, "max_leaf_nodes": 63, "min_samples_leaf": 40, "l2_regularization": 0.5, "class_weight": "balanced"}
+      },
+      {
+        "id": "C7_slow_compact",
+        "name": "Slow Conservative + Compact",
+        "params": {"learning_rate": 0.03, "max_iter": 300, "max_leaf_nodes": 31, "min_samples_leaf": 60, "l2_regularization": 1.0, "class_weight": "balanced"}
+      },
+      {
+        "id": "C8_shallow_ensemble",
+        "name": "Shallow Ensemble",
+        "params": {"learning_rate": 0.1, "max_iter": 150, "max_leaf_nodes": 15, "min_samples_leaf": 40, "l2_regularization": 0.1, "class_weight": "balanced"}
+      },
+      {
+        "id": "C9_unweighted_p21",
+        "name": "Unweighted Native Prevalence Baseline",
+        "params": {"learning_rate": 0.08, "max_iter": 150, "max_leaf_nodes": 63, "min_samples_leaf": 40, "l2_regularization": 0.5, "class_weight": null}
+      },
+      {
+        "id": "C10_unweighted_conservative",
+        "name": "Unweighted Conservative (Winner)",
+        "params": {"learning_rate": 0.05, "max_iter": 200, "max_leaf_nodes": 63, "min_samples_leaf": 60, "l2_regularization": 1.0, "class_weight": null}
+      },
+      {
+        "id": "C11_heavy_reg_stress",
+        "name": "Extreme Regularization Stress-Test",
+        "params": {"learning_rate": 0.08, "max_iter": 150, "max_leaf_nodes": 63, "min_samples_leaf": 100, "l2_regularization": 10.0, "class_weight": "balanced"}
+      }
+    ],
+    "discrepancy_explanation": "In walkthrough.md from the previous turn, the markdown table erroneously listed configurations as C01-C12 with synthetic parameter values (e.g., leaves=127). The authentic executed run in tune_phase21b.py, phase21b_experiment_manifest.json, and phase21b_model_optimization_report.md executed exactly C0 through C11 (12 configurations, 60 fits). No configurations were added or altered post-hoc. The winner C10_unweighted_conservative was selected strictly by the predeclared rule (highest mean 5-fold CV PR-AUC: 0.3096 +- 0.0076)."
+  },
+  "artifact_integrity_verification": {
+    "frozen_phase20_champion": {
+      "path": "backend/results/phase17/hist_gradient_boosting_classifier.joblib",
+      "expected_sha256": "e2b4e2ec334c18b343a55b1bc26395b3684f76678cfa80d4ccc9edf588b6da0b",
+      "actual_sha256": "e2b4e2ec334c18b343a55b1bc26395b3684f76678cfa80d4ccc9edf588b6da0b",
+      "size_bytes": 176794,
+      "verified": true
+    },
+    "frozen_phase20_encoder": {
+      "path": "backend/results/phase17/cat_encoder.joblib",
+      "expected_sha256": "14fe2087570446889226640ebb8508e7e832be9b2241c9f92407f9a3f10c6772",
+      "actual_sha256": "14fe2087570446889226640ebb8508e7e832be9b2241c9f92407f9a3f10c6772",
+      "size_bytes": 1098,
+      "verified": true
+    },
+    "frozen_phase20_calibrator": {
+      "path": "backend/results/phase18/calibration/phase18_calibrator.joblib",
+      "expected_sha256": "7fb7915aefc952c87a17b347004bd2f3f6061f1ad9172e3a9f6f41e2732cfbd3",
+      "actual_sha256": "7fb7915aefc952c87a17b347004bd2f3f6061f1ad9172e3a9f6f41e2732cfbd3",
+      "size_bytes": 879,
+      "verified": true
+    },
+    "frozen_phase21_candidate": {
+      "path": "backend/results/phase21/candidate_2_deep_interactions.joblib",
+      "expected_sha256": "210bf46945d6e91c5e7968eb5e96038d38682de3e492a1cba6caffe15a017fde",
+      "actual_sha256": "210bf46945d6e91c5e7968eb5e96038d38682de3e492a1cba6caffe15a017fde",
+      "size_bytes": 467445,
+      "verified": true
+    },
+    "phase21b_tuned_model": {
+      "path": "backend/results/phase21b/phase21b_tuned_model.joblib",
+      "manifest_sha256": "aa806c8185db465fd02536d2d4310638c499d41560ac759e0ea15d4a60f98443",
+      "actual_sha256": "aa806c8185db465fd02536d2d4310638c499d41560ac759e0ea15d4a60f98443",
+      "size_bytes": 692344,
+      "verified": true,
+      "notes": "Hash matches manifest. Markdown report truncated hash after first 16 chars."
+    },
+    "phase21b_calibrator": {
+      "path": "backend/results/phase21b/phase21b_calibrator.joblib",
+      "manifest_sha256": "cd9d2f3833112e9fd90b5bd355646a1e68f50ac5218b038a95f0d31766c5978f",
+      "actual_sha256": "cd9d2f3833112e9fd90b5bd355646a1e68f50ac5218b038a95f0d31766c5978f",
+      "size_bytes": 558,
+      "verified": true
+    },
+    "phase21b_encoder": {
+      "path": "backend/results/phase21b/phase21b_encoder.joblib",
+      "manifest_sha256": "14fe2087570446889226640ebb8508e7e832be9b2241c9f92407f9a3f10c6772",
+      "actual_sha256": "14fe2087570446889226640ebb8508e7e832be9b2241c9f92407f9a3f10c6772",
+      "size_bytes": 1098,
+      "verified": true
+    }
+  },
+  "preprocessing_and_pipeline_audit": {
+    "feature_count": 26,
+    "numeric_features_count": 13,
+    "categorical_features_count": 13,
+    "numeric_imputation": "Native HistGradientBoosting missing-value handling (no imputer transformer fitted). NaNs are represented as np.nan and routed to optimal child splits.",
+    "categorical_encoding": "OrdinalEncoder fitted on 13 features with handle_unknown='use_encoded_value' and unknown_value=-1. Missing categorical values are mapped to 'MISSING'.",
+    "feature_order": "Exact alignment: columns 0..12 numeric, columns 13..25 categorical.",
+    "inference_trace_reproduced": true,
+    "calibration_scale_check": "Threshold tau=0.165 was selected on uncalibrated out-of-fold probabilities and evaluated on uncalibrated test probabilities. On calibrated test probabilities, tau=0.165 achieves F1=0.3476 (vs 0.3488 uncalibrated). Production score_bridge_risk.py returns calibrated_deterioration_probability without imposing a fixed binary threshold."
+  },
+  "audit_metrics_reproduction_test_partition": {
+    "total_records": 65580,
+    "positive_events": 5843,
+    "test_prevalence": 0.089097285757853,
+    "uncalibrated_probabilities": {
+      "pr_auc": 0.3146602223378855,
+      "roc_auc": 0.771217098110618,
+      "brier_score": 0.07133143577698953,
+      "log_loss": 0.2558541231722526,
+      "ece_10_bins": 0.0053217498705336996,
+      "metrics_at_tau_0_165": {
+        "precision": 0.29910659650042835,
+        "recall": 0.418278281697758,
+        "f1": 0.34879406307977734,
+        "balanced_accuracy": 0.6612039912648753,
+        "accuracy": 0.8608417199756023,
+        "confusion_matrix": {
+          "tn": 54010,
+          "fp": 5727,
+          "fn": 3399,
+          "tp": 2444,
+          "total": 65580
+        }
+      }
+    },
+    "calibrated_probabilities": {
+      "brier_score": 0.0712612902809754,
+      "log_loss": 0.2556251406943428,
+      "ece_10_bins": 0.001953133359424807,
+      "calibration_slope": 1.0815836795751497,
+      "calibration_intercept": 0.18765218942161815,
+      "citl_bias": -0.0010543352337793188,
+      "metrics_at_tau_0_165": {
+        "precision": 0.29170052234474755,
+        "recall": 0.4300872839294883,
+        "f1": 0.3476276110112049,
+        "confusion_matrix": {
+          "tn": 53635,
+          "fp": 6102,
+          "fn": 3330,
+          "tp": 2513,
+          "total": 65580
+        }
+      }
+    }
+  },
+  "state_subgroups_verification": [
+    {
+      "state_code": "48",
+      "state_name": "Texas",
+      "total_bridges": 22499,
+      "positive_events": 1504,
+      "prevalence": 0.066847,
+      "pr_auc": 0.382887,
+      "roc_auc": 0.812150,
+      "f1": 0.412875,
+      "precision": 0.386219,
+      "recall": 0.443484
+    },
+    {
+      "state_code": "39",
+      "state_name": "Ohio",
+      "total_bridges": 16914,
+      "positive_events": 1735,
+      "prevalence": 0.102578,
+      "pr_auc": 0.271806,
+      "roc_auc": 0.698769,
+      "f1": 0.289170,
+      "precision": 0.276406,
+      "recall": 0.303170
+    },
+    {
+      "state_code": "06",
+      "state_name": "California",
+      "total_bridges": 13986,
+      "positive_events": 895,
+      "prevalence": 0.063993,
+      "pr_auc": 0.212400,
+      "roc_auc": 0.767679,
+      "f1": 0.237094,
+      "precision": 0.275964,
+      "recall": 0.207821
+    },
+    {
+      "state_code": "29",
+      "state_name": "Missouri",
+      "total_bridges": 12877,
+      "positive_events": 1269,
+      "prevalence": 0.098548,
+      "pr_auc": 0.315469,
+      "roc_auc": 0.759936,
+      "f1": 0.344216,
+      "precision": 0.287911,
+      "recall": 0.427896
+    },
+    {
+      "state_code": "42",
+      "state_name": "Pennsylvania",
+      "total_bridges": 12473,
+      "positive_events": 863,
+      "prevalence": 0.069189,
+      "pr_auc": 0.285219,
+      "roc_auc": 0.759110,
+      "f1": 0.307525,
+      "precision": 0.290422,
+      "recall": 0.326767
+    }
+  ],
+  "regression_verification": {
+    "backend_tests_command": "python -m unittest discover -s backend/tests -p 'test_*.py'",
+    "backend_tests_result": "Ran 70 tests in 3.462s (OK)",
+    "frontend_lint_command": "cd frontend && npm run lint",
+    "frontend_lint_result": "0 errors, 26 warnings",
+    "frontend_build_command": "cd frontend && npm run build",
+    "frontend_build_result": "Built in 16.59s, 0 errors, dist/ generated successfully"
+  }
+}

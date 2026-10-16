@@ -1,6 +1,18 @@
-﻿node_modules/
-dist/
-.env
-.env.local
-*.log
-.DS_Store
+﻿# Python generated files
+__pycache__/
+*.py[cod]
+
+# Large raw bridge datasets
+backend/2023/2023HwyBridgesDelimitedAllStates.txt
+backend/2024/2024HwyBridgesDelimitedAllStates.txt
+backend/2025/2025HwyBridgesDelimitedAllStates.txt
+2025hwybronefiledel.zip
+
+# Local database
+backend/*.sqlite
+backend/*.sqlite3
+backend/*.db
+
+# Generated observation state and backups
+backend/results/phase22/observation_tracker_state.*
+backend/results/phase22/event_id_cache.txt

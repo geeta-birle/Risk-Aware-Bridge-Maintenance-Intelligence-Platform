@@ -8,7 +8,9 @@ import { ConditionBadge } from '../components/common/ConditionBadge';
 import { LoadingState } from '../components/common/LoadingState';
 import { ErrorState } from '../components/common/ErrorState';
 import { EmptyState } from '../components/common/EmptyState';
-import { Search, ArrowUpDown, ArrowUp, ArrowDown, X, ExternalLink, RotateCcw } from 'lucide-react';
+import { Search, ArrowUpDown, ArrowUp, ArrowDown, X, ExternalLink, RotateCcw, Cpu, AlertTriangle, RefreshCw } from 'lucide-react';
+import { scoringService, mapBridgeAssetToScoringRecord } from '../services/api/scoringService';
+import { BridgeScoringResult } from '../types/scoring';
 
 export const BridgePortfolioPage: React.FC = () => {
   const navigate = useNavigate();
@@ -29,6 +31,29 @@ export const BridgePortfolioPage: React.FC = () => {
 
   // Quick Inspection Drawer
   const [inspectedBridge, setInspectedBridge] = useState<BridgeAsset | null>(null);
+  const [drawerScoringResult, setDrawerScoringResult] = useState<BridgeScoringResult | null>(null);
+  const [drawerScoringLoading, setDrawerScoringLoading] = useState(false);
+  const [drawerScoringError, setDrawerScoringError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setDrawerScoringResult(null);
+    setDrawerScoringError(null);
+  }, [inspectedBridge]);
+
+  const handleScoreInspectedBridge = async () => {
+    if (!inspectedBridge) return;
+    setDrawerScoringLoading(true);
+    setDrawerScoringError(null);
+    try {
+      const rec = mapBridgeAssetToScoringRecord(inspectedBridge);
+      const res = await scoringService.scoreBridge(rec);
+      setDrawerScoringResult(res);
+    } catch (err: any) {
+      setDrawerScoringError(err?.message || "Failed to score bridge risk via API");
+    } finally {
+      setDrawerScoringLoading(false);
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -486,12 +511,76 @@ export const BridgePortfolioPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-800">
+            <div className="mt-6 pt-4 border-t border-slate-800 space-y-3">
+              {/* Real-time ML Deterioration Scoring Section */}
+              <div className="p-3 bg-slate-950 rounded-lg border border-sky-800/80 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-sky-400 font-bold uppercase flex items-center gap-1.5">
+                    <Cpu className="w-3.5 h-3.5" />
+                    Live ML Deterioration Scorer
+                  </span>
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800">
+                    Phase 19 API
+                  </span>
+                </div>
+
+                {!drawerScoringResult && !drawerScoringLoading && !drawerScoringError && (
+                  <button
+                    onClick={handleScoreInspectedBridge}
+                    className="w-full py-2 px-3 rounded bg-sky-950/80 hover:bg-sky-900 border border-sky-700/80 text-sky-200 text-xs font-mono font-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <Cpu className="w-3.5 h-3.5" />
+                    Evaluate via Real REST API
+                  </button>
+                )}
+
+                {drawerScoringLoading && (
+                  <div className="py-2 flex items-center justify-center gap-2 text-xs font-mono text-sky-300">
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    Calling /api/score...
+                  </div>
+                )}
+
+                {drawerScoringError && (
+                  <div className="p-2 rounded bg-rose-950/60 border border-rose-800 text-rose-200 text-[11px] space-y-1">
+                    <div className="flex items-center gap-1 text-rose-300 font-bold">
+                      <AlertTriangle className="w-3 h-3" />
+                      <span>API Call Failed</span>
+                    </div>
+                    <p className="text-[10px]">{drawerScoringError}</p>
+                    <button
+                      onClick={handleScoreInspectedBridge}
+                      className="text-[10px] text-sky-300 underline font-mono cursor-pointer"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                )}
+
+                {drawerScoringResult && (
+                  <div className="space-y-1.5 pt-1 text-xs font-mono">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400 text-[11px]">Calibrated 2-Yr Prob:</span>
+                      <span className="text-base font-bold text-amber-400">
+                        {(drawerScoringResult.calibrated_deterioration_probability * 100).toFixed(2)}%
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-slate-500">Raw Margin (z):</span>
+                      <span className="text-slate-300 font-bold">{drawerScoringResult.raw_decision_score.toFixed(4)}</span>
+                    </div>
+                    <p className="text-[10px] text-slate-500 font-sans leading-tight pt-1">
+                      Predicts routine decline (DECK₂₀₂₅ &lt; DECK₂₀₂₃). Does not predict collapse.
+                    </p>
+                  </div>
+                )}
+              </div>
+
               <button
                 onClick={() => navigate(`/bridges/${inspectedBridge.id}`)}
-                className="w-full py-2.5 rounded-md bg-sky-600 hover:bg-sky-500 text-white font-medium text-xs transition-colors flex items-center justify-center gap-2 shadow-xs"
+                className="w-full py-2.5 rounded-md bg-sky-600 hover:bg-sky-500 text-white font-medium text-xs transition-colors flex items-center justify-center gap-2 shadow-xs cursor-pointer"
               >
-                Open Full Engineering Detail Dossier
+                Open Full Engineering Dossier & ML Scoring
                 <ExternalLink className="w-3.5 h-3.5" />
               </button>
             </div>

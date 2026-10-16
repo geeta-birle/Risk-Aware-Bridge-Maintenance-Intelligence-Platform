@@ -1,0 +1,48 @@
+{
+  "verified_at": "2026-10-13T21:41:31.182321",
+  "champion_checksums": {
+    "Classifier": "e2b4e2ec334c18b343a55b1bc26395b3684f76678cfa80d4ccc9edf588b6da0b",
+    "Encoder": "14fe2087570446889226640ebb8508e7e832be9b2241c9f92407f9a3f10c6772",
+    "Metadata": "b48922c28ee102d65f5af55fd6be446586bcc358e564e652455f8c1b8bedea24",
+    "Calibrator": "7fb7915aefc952c87a17b347004bd2f3f6061f1ad9172e3a9f6f41e2732cfbd3"
+  },
+  "test_sample_size": 65580,
+  "validation_sample_size": 65089,
+  "threshold_tau": 0.68,
+  "validation_metrics": {
+    "pr_auc": 0.298462013642521,
+    "roc_auc": 0.7633164660859271,
+    "precision": 0.30863844393592677,
+    "recall": 0.3744577477008503,
+    "f1": 0.33837710701685614,
+    "accuracy": 0.8703467559802731,
+    "balanced_accuracy": 0.6464878833909302,
+    "specificity": 0.91851801908101,
+    "fpr": 0.08148198091898999,
+    "fnr": 0.6255422522991497,
+    "confusion_matrix": {
+      "tn": 54492,
+      "fp": 4834,
+      "fn": 3605,
+      "tp": 2158
+    }
+  },
+  "test_metrics": {
+    "pr_auc": 0.29433545412630135,
+    "roc_auc": 0.762454567562509,
+    "precision": 0.30377035132819197,
+    "recall": 0.3640253294540476,
+    "f1": 0.33117944725574155,
+    "accuracy": 0.8689996950289722,
+    "balanced_accuracy": 0.6412088078209187,
+    "specificity": 0.9183922861877898,
+    "fpr": 0.08160771381221019,
+    "fnr": 0.6359746705459525,
+    "confusion_matrix": {
+      "tn": 54862,
+      "fp": 4875,
+      "fn": 3716,
+      "tp": 2127
+    }
+  }
+}
